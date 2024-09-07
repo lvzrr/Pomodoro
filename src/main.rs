@@ -1,0 +1,117 @@
+use chrono::{Timelike, Utc};
+use crossterm::{cursor, terminal, terminal::ClearType, ExecutableCommand};
+use std::io::stdout;
+use std::time;
+
+mod stages;
+use stages::*;
+
+fn main() {
+    let mut pom = Pomodoro {
+        elapsed: time::Duration::new(0, 0),
+        currentphase: Stage::Study,
+        stage_remtime: time::Duration::from_secs(0),
+        phasetime: time::Instant::now(),
+        currentdate: Utc::now().with_nanosecond(0).unwrap(),
+        cycles: 1,
+    };
+
+    loop {
+        pom.run();
+
+        let mut stdout = stdout();
+
+        // Clear the terminal
+        stdout
+            .execute(terminal::Clear(ClearType::All))
+            .expect("Failed to clear terminal");
+
+        // Get terminal size
+        let (width, height) = terminal::size().expect("Failed to get terminal size");
+
+        // Emoji positioning
+        let emoji = match pom.currentphase {
+            Stage::Study => ".·´¯`(>▂<)´¯`·.",
+            Stage::Break => "   (/¯◡ ‿ ◡)/¯",
+        };
+        let emoji_x = width / 2 - emoji.len() as u16 / 2;
+        let emoji_y = height / 2;
+
+        // Print the emoji in the center
+        stdout
+            .execute(cursor::MoveTo(emoji_x, emoji_y))
+            .expect("Failed to move cursor to emoji");
+        print!("{}", emoji);
+
+        stdout
+            .execute(cursor::MoveTo(emoji_x, emoji_y + 10))
+            .expect("Failed to move cursor to emoji");
+        match pom.currentphase {
+            Stage::Study => print!("   Focus up!"),
+            Stage::Break => print!(" Take it easy..."),
+        }
+
+        let emoji_4x = width / 4;
+        let emoji_4y = height - 3;
+
+        if width > 100 {
+            stdout
+                .execute(cursor::MoveTo(1, emoji_4y))
+                .expect("Failed to move cursor to bottom");
+            print!("| {} |", pom.currentdate);
+
+            stdout
+                .execute(cursor::MoveTo(emoji_4x + 10, emoji_4y))
+                .expect("Failed to move cursor to bottom");
+            print!("| Phase : {} |", pom.currentphase.disp());
+
+            stdout
+                .execute(cursor::MoveTo(emoji_4x * 2, emoji_4y))
+                .expect("Failed to move cursor to bottom");
+            print!(
+                "| Time remaining to {} phase: {} |",
+                match pom.currentphase {
+                    Stage::Study => "break",
+                    Stage::Break => "study",
+                },
+                format_duration(pom.elapsed, pom.stage_remtime)
+            );
+
+            stdout
+                .execute(cursor::MoveTo((emoji_4x * 3) + 20, emoji_4y))
+                .expect("Failed to move cursor to bottom");
+            print!("| Pomodoros: {} |", pom.cycles);
+
+            stdout
+                .execute(cursor::MoveTo(emoji_4x * 8, emoji_4y + 14))
+                .expect("Failed to move cursor to bottom");
+            print!("");
+        } else {
+            stdout
+                .execute(cursor::MoveTo(1, emoji_4y))
+                .expect("Failed to move cursor to bottom");
+            print!("| {} |", pom.currentdate);
+
+            stdout
+                .execute(cursor::MoveTo(emoji_4x + (width / 4), emoji_4y))
+                .expect("Failed to move cursor to bottom");
+            print!("| {} |", pom.currentphase.disp());
+
+            stdout
+                .execute(cursor::MoveTo((emoji_4x * 2) + (width / 5), emoji_4y))
+                .expect("Failed to move cursor to bottom");
+            print!("| {} |", format_duration(pom.elapsed, pom.stage_remtime));
+
+            stdout
+                .execute(cursor::MoveTo((emoji_4x * 3) + (width / 6), emoji_4y))
+                .expect("Failed to move cursor to bottom");
+            print!("| {} |", pom.cycles);
+
+            stdout
+                .execute(cursor::MoveTo(emoji_4x * 8, emoji_4y + 8))
+                .expect("Failed to move cursor to bottom");
+            print!("");
+        }
+        std::thread::sleep(time::Duration::from_secs(1));
+    }
+}
