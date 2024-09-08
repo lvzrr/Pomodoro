@@ -16,23 +16,36 @@ fn main() {
         cycles: 1,
     };
 
+    // Clear the terminal
+
+    let mut stdout = stdout();
+
+    stdout
+        .execute(terminal::Clear(ClearType::All))
+        .expect("Failed to clear terminal");
+
+    let (mut prewidth, mut preheight) = terminal::size().expect("Failed to get terminal size");
+    let mut prephase = pom.currentphase;
     loop {
         pom.run();
-
-        let mut stdout = stdout();
-
-        // Clear the terminal
-        stdout
-            .execute(terminal::Clear(ClearType::All))
-            .expect("Failed to clear terminal");
 
         // Get terminal size
         let (width, height) = terminal::size().expect("Failed to get terminal size");
 
+        if (width != prewidth) || (height != preheight) || (prephase != pom.currentphase) {
+            stdout
+                .execute(terminal::Clear(ClearType::All))
+                .expect("Failed to clear terminal");
+
+            prewidth = width;
+            preheight = height;
+            prephase = pom.currentphase;
+        }
+
         // Emoji positioning
         let emoji = match pom.currentphase {
-            Stage::Study => ".·´¯`(>▂<)´¯`·.",
-            Stage::Break => "   (/¯◡ ‿ ◡)/¯",
+            Stage::Study => "(｡>﹏<)",
+            Stage::Break => "(｡˃ ᵕ ˂)",
         };
         let emoji_x = width / 2 - emoji.len() as u16 / 2;
         let emoji_y = height / 2;
@@ -43,18 +56,23 @@ fn main() {
             .expect("Failed to move cursor to emoji");
         print!("{}", emoji);
 
+        let text = "「https://github.com/lvzrr/Pomodoro 」";
+        let text_x = width / 2 - text.len() as u16 / 2;
+
         stdout
-            .execute(cursor::MoveTo(emoji_x, emoji_y + 10))
+            .execute(cursor::MoveTo(text_x, 3))
             .expect("Failed to move cursor to emoji");
-        match pom.currentphase {
-            Stage::Study => print!("   Focus up!"),
-            Stage::Break => print!(" Take it easy..."),
-        }
+        print!("{}", text);
+
+        stdout
+            .execute(cursor::MoveTo(0, 3))
+            .expect("Failed to move cursor to bottom");
+        print!("ᓚ₍ ^. ̫ .^₎");
 
         let emoji_4x = width / 4;
         let emoji_4y = height - 3;
 
-        if width > 100 {
+        if width > 200 {
             stdout
                 .execute(cursor::MoveTo(1, emoji_4y))
                 .expect("Failed to move cursor to bottom");
@@ -108,10 +126,10 @@ fn main() {
             print!("| {} |", pom.cycles);
 
             stdout
-                .execute(cursor::MoveTo(emoji_4x * 8, emoji_4y + 8))
+                .execute(cursor::MoveTo(width, height))
                 .expect("Failed to move cursor to bottom");
             print!("");
         }
-        std::thread::sleep(time::Duration::from_secs(1));
+        std::thread::sleep(time::Duration::from_millis(100));
     }
 }

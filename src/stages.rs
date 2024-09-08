@@ -43,8 +43,8 @@ impl Pomodoro {
     pub fn run(&mut self) {
         // Update stage remaining time based on current phase
         self.stage_remtime = match self.currentphase {
-            Stage::Study => time::Duration::from_secs(1200),
-            Stage::Break => time::Duration::from_secs(300),
+            Stage::Study => time::Duration::from_secs(10),
+            Stage::Break => time::Duration::from_secs(10),
         };
 
         self.currentdate = Utc::now().with_nanosecond(0).unwrap();
