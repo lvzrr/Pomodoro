@@ -2,7 +2,6 @@ use chrono::{Timelike, Utc};
 use crossterm::{cursor, terminal, terminal::ClearType, ExecutableCommand};
 use std::io::stdout;
 use std::time;
-
 mod stages;
 use stages::*;
 

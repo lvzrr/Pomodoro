@@ -1,6 +1,8 @@
 use chrono::{DateTime, Timelike, Utc};
 use std::time;
 
+use notify_rust::*;
+
 #[derive(PartialEq, Copy, Clone, Debug)]
 pub enum Stage {
     Study,
@@ -25,6 +27,18 @@ impl Stage {
     }
 }
 
+pub fn notify(mode: &str) {
+    let text: &str = &format!("Wake up! It's time to {}", mode);
+    let _noti = Notification::new()
+        .appname("Pomodoro")
+        .summary(text)
+        .auto_icon()
+        .timeout(Timeout::Milliseconds(6000))
+        .sound_name("Default")
+        .show()
+        .unwrap();
+}
+
 pub fn format_duration(elapsed: time::Duration, stagetime: time::Duration) -> String {
     // Total time difference in seconds
     let remaining = stagetime.as_secs() as i64 - elapsed.as_secs() as i64;
@@ -43,8 +57,8 @@ impl Pomodoro {
     pub fn run(&mut self) {
         // Update stage remaining time based on current phase
         self.stage_remtime = match self.currentphase {
-            Stage::Study => time::Duration::from_secs(10),
-            Stage::Break => time::Duration::from_secs(10),
+            Stage::Study => time::Duration::from_secs(1200),
+            Stage::Break => time::Duration::from_secs(300),
         };
 
         self.currentdate = Utc::now().with_nanosecond(0).unwrap();
@@ -59,10 +73,12 @@ impl Pomodoro {
                     self.phasetime = time::Instant::now();
                     self.currentphase = Stage::Break;
                     self.cycles += 1;
+                    notify(self.currentphase.disp());
                 }
                 Stage::Break => {
                     self.phasetime = time::Instant::now();
                     self.currentphase = Stage::Study;
+                    notify(self.currentphase.disp());
                 }
             }
         }
