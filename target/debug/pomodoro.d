@@ -1,1 +1,0 @@
-C:\Users\luxor\OneDrive\ -\ Universidad\ Politécnica\ de\ Madrid\Programs\pomodoro\target\debug\pomodoro.exe: C:\Users\luxor\OneDrive\ -\ Universidad\ Politécnica\ de\ Madrid\Programs\pomodoro\src\main.rs C:\Users\luxor\OneDrive\ -\ Universidad\ Politécnica\ de\ Madrid\Programs\pomodoro\src\stages.rs
