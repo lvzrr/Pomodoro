@@ -11,7 +11,7 @@ Author: lvxw
 
 WARNING: This program has been written by lvxw (https://github.com/lvzrr) and any and all unauthoraised plagiarism is strictly prohibited
 */
-use chrono::{DateTime, Timelike, Utc};
+use chrono::{DateTime, Local, Timelike};
 use std::time;
 
 use notify_rust::*;
@@ -27,7 +27,7 @@ pub struct Pomodoro {
     pub stage_remtime: time::Duration,
     pub phasetime: time::Instant,
     pub elapsed: time::Duration,
-    pub currentdate: DateTime<Utc>,
+    pub currentdate: DateTime<Local>,
     pub cycles: u8,
 }
 
@@ -74,7 +74,7 @@ impl Pomodoro {
             Stage::Break => time::Duration::from_secs(300),
         };
 
-        self.currentdate = Utc::now().with_nanosecond(0).unwrap();
+        self.currentdate = Local::now().with_nanosecond(0).unwrap();
 
         // Calculate elapsed time since the last phase started
         self.elapsed = self.phasetime.elapsed();
@@ -97,4 +97,3 @@ impl Pomodoro {
         }
     }
 }
-

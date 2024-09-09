@@ -11,7 +11,7 @@ Author: lvxw
 
 WARNING: This program has been written by lvxw (https://github.com/lvzrr) and any and all unauthoraised plagiarism is strictly prohibited
 */
-use chrono::{Timelike, Utc};
+use chrono::{Local, Timelike};
 use crossterm::{cursor, terminal, terminal::ClearType, ExecutableCommand};
 use std::io::stdout;
 use std::time;
@@ -19,12 +19,13 @@ mod stages;
 use stages::*;
 
 fn main() {
+    let _local = Local::now();
     let mut pom = Pomodoro {
         elapsed: time::Duration::new(0, 0),
         currentphase: Stage::Study,
         stage_remtime: time::Duration::from_secs(0),
         phasetime: time::Instant::now(),
-        currentdate: Utc::now().with_nanosecond(0).unwrap(),
+        currentdate: Local::now().with_nanosecond(0).unwrap(),
         cycles: 1,
     };
 
@@ -145,4 +146,3 @@ fn main() {
         std::thread::sleep(time::Duration::from_millis(100));
     }
 }
-
