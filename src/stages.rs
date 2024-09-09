@@ -1,3 +1,16 @@
+/*
+Author: lvxw
+
+      :::    :::     ::: :::    ::: :::       :::
+     :+:    :+:     :+: :+:    :+: :+:       :+:
+    +:+    +:+     +:+  +:+  +:+  +:+       +:+
+   +#+    +#+     +:+   +#++:+   +#+  +:+  +#+
+  +#+     +#+   +#+   +#+  +#+  +#+ +#+#+ +#+
+ #+#      #+#+#+#   #+#    #+#  #+#+# #+#+#
+########## ###     ###    ###   ###   ###
+
+WARNING: This program has been written by lvxw (https://github.com/lvzrr) and any and all unauthoraised plagiarism is strictly prohibited
+*/
 use chrono::{DateTime, Timelike, Utc};
 use std::time;
 
@@ -84,3 +97,4 @@ impl Pomodoro {
         }
     }
 }
+

@@ -1,3 +1,16 @@
+/*
+Author: lvxw
+
+      :::    :::     ::: :::    ::: :::       :::
+     :+:    :+:     :+: :+:    :+: :+:       :+:
+    +:+    +:+     +:+  +:+  +:+  +:+       +:+
+   +#+    +#+     +:+   +#++:+   +#+  +:+  +#+
+  +#+     +#+   +#+   +#+  +#+  +#+ +#+#+ +#+
+ #+#      #+#+#+#   #+#    #+#  #+#+# #+#+#
+########## ###     ###    ###   ###   ###
+
+WARNING: This program has been written by lvxw (https://github.com/lvzrr) and any and all unauthoraised plagiarism is strictly prohibited
+*/
 use chrono::{Timelike, Utc};
 use crossterm::{cursor, terminal, terminal::ClearType, ExecutableCommand};
 use std::io::stdout;
@@ -132,3 +145,4 @@ fn main() {
         std::thread::sleep(time::Duration::from_millis(100));
     }
 }
+
